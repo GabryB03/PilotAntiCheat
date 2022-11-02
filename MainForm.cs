@@ -45,6 +45,23 @@ public partial class MainForm : MetroForm
 
         // Implement Anti VM.
         // Implement Anti Sandbox (check also window title [#]).
+        // Implement Anti Thread Suspend.
+        // Implement Anti Thread Termination.
+        // Check for bad drivers (interception {mouse.sys, keyboard.sys}, KProcessHacker, DBK64 {Cheat Engine Driver}).
+        // https://stackoverflow.com/questions/23327660/how-to-check-whether-a-driver-is-installed
+        // https://stackoverflow.com/questions/24874558/how-to-get-a-driver-list-in-windows
+        // https://learn.microsoft.com/en-us/dotnet/api/system.serviceprocess.servicecontroller.getdevices?view=dotnet-plat-ext-6.0
+
+        // Useful resources:
+        // 1) https://github.com/ExpLife0011/Sagaan-AntiCheat-V2.0
+        // 2) https://www.unknowncheats.me/forum/anti-cheat-bypass/291300-sagaan-anticheat-analysis.html
+        // 3) https://github.com/mathisvickie/KMAC
+        // 4) https://github.com/allogic/KDBG
+        // 5) https://github.com/hrt/MouseInjectDetection
+        // 6) https://github.com/gmh5225/Detection-CheatEngine
+        // 7) https://github.com/sank20144/MNS-System
+        // 8) https://github.com/LYingSiMon/al-khaser
+        // 9) https://github.com/LYingSiMon/m_anticheat
 
         AntiDump.RunAntiDump();
         AntiDebug.HideCurrentThreadFromDebugger();

@@ -11,6 +11,7 @@ public class AntiBadModules
         // https://github.com/cheat-engine/cheat-engine/tree/master/Cheat%20Engine/VEHDebug
         // https://github.com/cheat-engine/cheat-engine/blob/master/Cheat%20Engine/VEHDebugger.pas
         // https://forum.cheatengine.org/viewtopic.php?p=5772627&sid=352e465bee4a7f7bf99169e24a27da32
+        // Lua Injectors (same for processes, luaL_newstate, lua_dump, ...).
     };
 
     public static bool IsBadModuleLoaded()

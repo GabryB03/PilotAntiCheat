@@ -1,0 +1,373 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Reloaded.Memory.Sigscan</name>
+    </assembly>
+    <members>
+        <member name="T:Reloaded.Memory.Sigscan.Scanner">
+            <summary>
+            Provides an implementation of a simple signature scanner sitting ontop of Reloaded.Memory.
+            </summary>
+             <summary>
+             Modified version of: Pattern scan implementation 'LazySIMD' - by uberhalit
+             https://github.com/uberhalit
+            
+             Changes made:
+                 - Handles patterns smaller than register size at end of data.
+                 - Handles 1 byte pattern with a fallback.
+                 - Handles patterns starting with a null.
+             
+             Uses SIMD instructions on AVX-supporting processors, the longer the pattern the more efficient this should get.
+             Requires RyuJIT compiler for hardware acceleration which **should** be enabled by default on newer VS versions.
+             Ideally a pattern would be a multiple of (ymm0 register size) / 8 so all available space gets used in calculations.
+            
+             Licensed under the MIT License: https://github.com/uberhalit/PatternScanBench/blob/master/LICENSE
+             </summary>
+             <summary>
+             Modified version of: Pattern scan implementation 'LazySIMD' - by uberhalit
+             https://github.com/uberhalit
+            
+             Changes made:
+                 - Handles patterns smaller than register size at end of data.
+                 - Handles 1 byte pattern with a fallback.
+                 - Handles patterns starting with a null.
+             
+             Uses SIMD instructions on SSE2-supporting processors, the longer the pattern the more efficient this should get.
+             Requires RyuJIT compiler for hardware acceleration which **should** be enabled by default on newer VS versions.
+             Ideally a pattern would be a multiple of (xmm0 register size) / 8 so all available space gets used in calculations.
+            
+             Licensed under the MIT License: https://github.com/uberhalit/PatternScanBench/blob/master/LICENSE
+             </summary>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.#ctor(System.Byte[])">
+            <summary>
+            Creates a signature scanner given the data in which patterns are to be found.
+            </summary>
+            <param name="data">The data to look for signatures inside.</param>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.#ctor(System.Diagnostics.Process)">
+            <summary>
+            Creates a signature scanner given a process.
+            The scanner will be initialised to scan the main module of the process.
+            </summary>
+            <param name="process">The process from which to scan patterns in. (Not Null)</param>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.#ctor(System.Diagnostics.Process,System.Diagnostics.ProcessModule)">
+            <summary>
+            Creates a signature scanner given a process and a module (EXE/DLL)
+            from which the signatures are to be found.
+            </summary>
+            <param name="process">The process from which to scan patterns in. (Not Null)</param>
+            <param name="module">An individual module of the given process, which denotes the start and end of memory region scanned.</param>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.#ctor(System.Byte*,System.Int32)">
+            <summary>
+            Creates a signature scanner given the data in which patterns are to be found.
+            </summary>
+            <param name="data">The data to look for signatures inside.</param>
+            <param name="length">The length of the data.</param>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.Finalize">
+            <inheritdoc />
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.Dispose(System.Boolean)">
+            <summary/>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPattern(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPattern(System.String,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPatterns(System.Collections.Generic.IReadOnlyList{System.String},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPatternsCached(System.Collections.Generic.IReadOnlyList{System.String},System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPattern_Avx2(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPattern_Sse2(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPattern_Compiled(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPattern_Simple(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Scanner.AvxRegisterLength">
+            <summary>
+            Length of an AVX register in bytes.
+            </summary>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPatternAvx2(System.Byte*,System.Int32,System.String)">
+            <summary>
+            Returns address of pattern using 'LazySIMD' implementation by uberhalit. Can match 0.
+            </summary>
+            <param name="data">Address of the data to be scanned.</param>
+            <param name="dataLength">Length of the data to be scanned.</param>
+            <param name="pattern">
+                The pattern to look for inside the given region.
+                Example: "11 22 33 ?? 55".
+                Key: ?? represents a byte that should be ignored, anything else if a hex byte. i.e. 11 represents 0x11, 1F represents 0x1F
+            </param>
+            <returns>-1 if pattern is not found.</returns>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.PadPatternToVector256Avx(Reloaded.Memory.Sigscan.Structs.SimdPatternScanData@)">
+            <summary>
+            Generates byte-Vectors that are right-padded with 0 from a pattern. The first byte is skipped.
+            </summary>
+            <param name="cbPattern">The pattern in question.</param>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPatternCompiled(System.Byte*,System.Int32,Reloaded.Memory.Sigscan.Structs.CompiledScanPattern)">
+            <summary>
+            Attempts to find a given pattern inside the memory region this class was created with.
+            This method generally works better than a simple byte search when the expected offset is bigger than 4096.
+            </summary>
+            <param name="data">Address of the data to be scanned.</param>
+            <param name="dataLength">Length of the data to be scanned.</param>
+            <param name="pattern">
+                The compiled pattern to look for inside the given region.
+            </param>
+            <returns>A result indicating an offset (if found) of the pattern.</returns>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPatternSimple(System.Byte*,System.Int32,Reloaded.Memory.Sigscan.Structs.SimplePatternScanData)">
+            <summary>
+            Attempts to find a given pattern inside the memory region this class was created with.
+            This method uses the simple search, which simply iterates over all bytes, reading max 1 byte at once.
+            This method generally works better when the expected offset is smaller than 4096.
+            </summary>
+            <param name="data">Address of the data to be scanned.</param>
+            <param name="dataLength">Length of the data to be scanned.</param>
+            <param name="pattern">
+                The pattern to look for inside the given region.
+                Example: "11 22 33 ?? 55".
+                Key: ?? represents a byte that should be ignored, anything else if a hex byte. i.e. 11 represents 0x11, 1F represents 0x1F
+            </param>
+            <returns>A result indicating an offset (if found) of the pattern.</returns>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Scanner.SseRegisterLength">
+            <summary>
+            Length of an SSE2 register in bytes.
+            </summary>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.FindPatternSse2(System.Byte*,System.Int32,System.String)">
+            <summary>
+            Returns address of pattern using 'LazySIMD' implementation by uberhalit. Can match 0.
+            </summary>
+            <param name="data">Address of the data to be scanned.</param>
+            <param name="dataLength">Length of the data to be scanned.</param>
+            <param name="pattern">
+                The pattern to look for inside the given region.
+                Example: "11 22 33 ?? 55".
+                Key: ?? represents a byte that should be ignored, anything else if a hex byte. i.e. 11 represents 0x11, 1F represents 0x1F
+            </param>
+            <returns>-1 if pattern is not found.</returns>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.BuildMatchIndexes(Reloaded.Memory.Sigscan.Structs.SimdPatternScanData@)">
+            <summary>
+            Builds a table that indicates which positions in pattern should be matched,
+            the first match is skipped and all indexes are shifted to the left by 1.
+            </summary>
+            <param name="scanPattern">Data of the pattern to be scanned.</param>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Scanner.PadPatternToVector128Sse(Reloaded.Memory.Sigscan.Structs.SimdPatternScanData@)">
+            <summary>
+            Generates byte-Vectors that are right-padded with 0 from a pattern. The first byte is skipped.
+            </summary>
+            <param name="cbPattern">The pattern in question.</param>
+        </member>
+        <member name="T:Reloaded.Memory.Sigscan.ScannerFactory">
+            <inheritdoc />
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.ScannerFactory.CreateScanner(System.Byte[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.ScannerFactory.CreateScanner(System.Diagnostics.Process)">
+            <inheritdoc />
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.ScannerFactory.CreateScanner(System.Diagnostics.Process,System.Diagnostics.ProcessModule)">
+            <inheritdoc />
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.ScannerFactory.CreateScanner(System.Byte*,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:Reloaded.Memory.Sigscan.Structs.CompiledScanPattern">
+            <summary>
+            Represents the pattern to be searched by the scanner.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.CompiledScanPattern.Pattern">
+            <summary>
+            The pattern the instruction set was created from.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.CompiledScanPattern.Length">
+            <summary>
+            The length of the original given pattern.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.CompiledScanPattern.Instructions">
+            <summary>
+            Contains the functions that will be executed in order to validate a given block of memory to equal
+            the pattern this class was instantiated with.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.CompiledScanPattern.NumberOfInstructions">
+            <summary>
+            Contains the number of instructions in the <see cref="F:Reloaded.Memory.Sigscan.Structs.CompiledScanPattern.Instructions"/> object.
+            </summary>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Structs.CompiledScanPattern.#ctor(System.String)">
+            <summary>
+            Creates a new pattern scan target given a string representation of a pattern.
+            </summary>
+            <param name="stringPattern">
+                The pattern to look for inside the given region.
+                Example: "11 22 33 ?? 55".
+                Key: ?? represents a byte that should be ignored, anything else if a hex byte. i.e. 11 represents 0x11, 1F represents 0x1F.
+            </param>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Structs.CompiledScanPattern.GenerateMaskAndValue(System.Span{System.String},System.UIntPtr@,System.UIntPtr@)">
+            <summary>
+            Generates a mask given a pattern between size 0-8.
+            </summary>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Structs.CompiledScanPattern.op_Implicit(System.String)~Reloaded.Memory.Sigscan.Structs.CompiledScanPattern">
+            <summary>
+            Implicitly converts a string to a scan pattern.
+            </summary>
+        </member>
+        <member name="T:Reloaded.Memory.Sigscan.Structs.GenericInstruction">
+            <summary>
+            Represents a generic instruction to match an 8 byte masked value at a given address.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.GenericInstruction.LongValue">
+            <summary>
+            The value to match.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.GenericInstruction.Mask">
+            <summary>
+            The mask to apply before comparing with the value.
+            </summary>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Structs.GenericInstruction.#ctor(System.UIntPtr,System.UIntPtr)">
+            <summary>
+            Creates an instruction to match an 8 byte masked value at a given address.
+            </summary>
+            <param name="longValue">The value to be matched.</param>
+            <param name="mask">The mask to match.</param>
+        </member>
+        <member name="T:Reloaded.Memory.Sigscan.Structs.SimdPatternScanData">
+            <summary>
+            [Internal and Test Use]
+            Represents the pattern to be searched by the scanner.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.SimdPatternScanData.Bytes">
+            <summary>
+            The pattern of bytes to check for.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.SimdPatternScanData.Mask">
+            <summary>
+            The mask string to compare against. `x` represents check while `?` ignores.
+            Each `x` and `?` represent 1 byte.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.SimdPatternScanData.LeadingIgnoreCount">
+            <summary>
+            Count of leading ?? symbols (at start of pattern).
+            </summary>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Structs.SimdPatternScanData.#ctor(System.String)">
+            <summary>
+            Creates a new pattern scan target given a string representation of a pattern.
+            </summary>
+            <param name="stringPattern">
+                The pattern to look for inside the given region.
+                Example: "11 22 33 ?? 55".
+                Key: ?? represents a byte that should be ignored, anything else if a hex byte. i.e. 11 represents 0x11, 1F represents 0x1F.
+            </param>
+        </member>
+        <member name="T:Reloaded.Memory.Sigscan.Structs.SimplePatternScanData">
+            <summary>
+            [Internal and Test Use]
+            Represents the pattern to be searched by the scanner.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.SimplePatternScanData.Bytes">
+            <summary>
+            The pattern of bytes to check for.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.SimplePatternScanData.Mask">
+            <summary>
+            The mask string to compare against. `x` represents check while `?` ignores.
+            Each `x` and `?` represent 1 byte.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Structs.SimplePatternScanData.Pattern">
+            <summary>
+            The original string from which this pattern was created.
+            </summary>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Structs.SimplePatternScanData.#ctor(System.String)">
+            <summary>
+            Creates a new pattern scan target given a string representation of a pattern.
+            </summary>
+            <param name="stringPattern">
+                The pattern to look for inside the given region.
+                Example: "11 22 33 ?? 55".
+                Key: ?? represents a byte that should be ignored, anything else if a hex byte. i.e. 11 represents 0x11, 1F represents 0x1F.
+            </param>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Structs.SimplePatternScanData.op_Implicit(System.String)~Reloaded.Memory.Sigscan.Structs.SimplePatternScanData">
+            <summary>
+            Implicitly converts a string to a scan pattern.
+            </summary>
+        </member>
+        <member name="T:Reloaded.Memory.Sigscan.Utility.SpanSplitEnumerator`1">
+            <summary>
+            Creates a <see cref="T:Reloaded.Memory.Sigscan.Utility.SpanSplitEnumerator`1"/> that allows for the efficient enumeration of a string
+            to be split.
+            </summary>
+            <typeparam name="TSpanType">The item type held by the span..</typeparam>
+        </member>
+        <member name="P:Reloaded.Memory.Sigscan.Utility.SpanSplitEnumerator`1.SplitItem">
+            <summary>
+            The item to split on.
+            </summary>
+        </member>
+        <member name="P:Reloaded.Memory.Sigscan.Utility.SpanSplitEnumerator`1.Current">
+            <summary>
+            The current state of the span.
+            </summary>
+        </member>
+        <member name="F:Reloaded.Memory.Sigscan.Utility.SpanSplitEnumerator`1._original">
+            <summary>
+            The original span this struct was instantiated with.
+            </summary>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Utility.SpanSplitEnumerator`1.MoveNext">
+            <summary>
+            Moves the span to the next element delimited by the item to split by.
+            </summary>
+            <returns>True if the item has moved. False if there is no item to move to.</returns>
+        </member>
+        <member name="M:Reloaded.Memory.Sigscan.Utility.SpanSplitEnumerator`1.#ctor(System.ReadOnlySpan{`0},`0)">
+            <summary>
+            Creates an enumerator used to split spans by a specific item.
+            </summary>
+            <param name="item">The span to split items within.</param>
+            <param name="splitItem">The item to split on.</param>
+        </member>
+    </members>
+</doc>

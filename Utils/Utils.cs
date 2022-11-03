@@ -1,14 +1,23 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 using System.Text;
+using System.Diagnostics;
+using System.Runtime;
 
 public class Utils
 {
     [DllImport("kernel32.dll")]
-    public static extern IntPtr LoadLibrary(string dllToLoad);
+    private static extern IntPtr LoadLibrary(string dllToLoad);
 
     [DllImport("kernel32.dll")]
-    public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+    private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+
+    [DllImport("psapi.dll")]
+    private static extern int EmptyWorkingSet(IntPtr hwProc);
+
+    [DllImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool SetProcessWorkingSetSize(IntPtr process, UIntPtr minimumWorkingSetSize, UIntPtr maximumWorkingSetSize);
 
     public static bool IsFunctionPatched(string library, string functionName)
     {
@@ -65,5 +74,14 @@ public class Utils
         }
 
         return result;
+    }
+
+    public static void ClearRAM()
+    {
+        EmptyWorkingSet(Process.GetCurrentProcess().Handle);
+        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+        GC.Collect(GC.MaxGeneration);
+        GC.WaitForPendingFinalizers();
+        SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, (UIntPtr)0xFFFFFFFF, (UIntPtr)0xFFFFFFFF);
     }
 }

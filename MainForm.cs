@@ -65,9 +65,6 @@ public partial class MainForm : MetroForm
         // https://stackoverflow.com/questions/24874558/how-to-get-a-driver-list-in-windows
         // https://learn.microsoft.com/en-us/dotnet/api/system.serviceprocess.servicecontroller.getdevices?view=dotnet-plat-ext-6.0
 
-        // FOR BAD PROCESSES: check window title (tolower, filtered), process name (tolower, filtered), check modules names.
-        // FOR BAD MODULES: check modules names.
-
         // Useful resources:
         // 1) https://github.com/ExpLife0011/Sagaan-AntiCheat-V2.0
         // 2) https://www.unknowncheats.me/forum/anti-cheat-bypass/291300-sagaan-anticheat-analysis.html

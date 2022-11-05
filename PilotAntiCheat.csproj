@@ -97,6 +97,8 @@
     </Compile>
     <Compile Include="Antis\AntiDump.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Utils\FileList.cs" />
+    <Compile Include="Utils\ModuleFileName.cs" />
     <Compile Include="Utils\NTSTATUS.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="Utils\WinStructs.cs" />

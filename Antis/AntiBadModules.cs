@@ -14,6 +14,12 @@ public class AntiBadModules
         // Lua Injectors (same for processes, luaL_newstate, lua_dump, ...).
     };
 
+    private static string[] blockedModuleNames = new string[]
+    {
+        "speedhack", // Cheat Engine Speed Hack
+        "vehdebug" // Cheat Engine VEH Debugger
+    };
+
     public static bool IsBadModuleLoaded()
     {
         foreach (ProcessModule module in Process.GetCurrentProcess().Modules)
@@ -22,6 +28,18 @@ public class AntiBadModules
             {
                 if (module.ModuleName != Process.GetCurrentProcess().MainModule.ModuleName)
                 {
+                    string filteredModuleName = Utils.FilterString(module.ModuleName);
+
+                    foreach (string moduleName in blockedModuleNames)
+                    {
+                        string newModuleName = Utils.FilterString(moduleName);
+
+                        if (newModuleName.Contains(filteredModuleName))
+                        {
+                            return true;
+                        }
+                    }
+
                     Scanner scanner = new Scanner(Process.GetCurrentProcess(), module);
 
                     foreach (string pattern in blockedPatterns)

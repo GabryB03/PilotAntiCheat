@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 
 public class AntiBadProcesses
 {
@@ -25,7 +26,7 @@ public class AntiBadProcesses
 
         // 5) List of network manipulation/editing softwares to block: Wireshark, Fiddler, Charles, mitmproxy, Burp Suite, Zed Attack Proxy (ZAP),
         // nmap, HTTP Toolkit, Proxyman, Requestly, Progman, Charles Proxy, Deep Packet Inspection, PRTG Monitor, tcpdump, Savvius Omnipeek,
-        // Ettercap, Kismet, SmartSniff, EtherApe.
+        // Ettercap, Kismet, SmartSniff, EtherApe, http://httpdebugger.com/
 
         // 6) List of DLL injector softwares to block: OVD Public Injector, Xenos Injector, DLL Injector, DLL Vaccine, Extreme Injector,
         // Auto DLL Injector, Remote Injector DLL, Injector Gadget.
@@ -39,6 +40,24 @@ public class AntiBadProcesses
         // Check loaded DLL header first bytes, check if equal (?), {as remote or manual mapped}.
         // Simple anti cheat example: https://github.com/jnastarot/anti-cheat
         // Protect from memory writing/read by other processes, maybe VirtualProtect/VirtualProtectEx, NtSomeThing that can protect memory regions (?).
+    };
+
+    private static string[] blockedProcessNames = new string[]
+    {
+        "Cheat Engine",
+        "OLLYDBG"
+    };
+
+    private static string[] blockedWindowTitles = new string[]
+    {
+        "Cheat Engine",
+        "OLLYDBG"
+    };
+
+    private static FileList[] blockedFileLists = new FileList[]
+    {
+        new FileList(new string[] { "ced3d9hook64.dll" }), // Cheat Engine
+        new FileList(new string[] { "ollydbg.ini", "Cmdline.dll", "register.txt" }) // OLLYDBG
     };
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -73,15 +92,60 @@ public class AntiBadProcesses
         }
 
         string actualWindow = GetCaptionOfActiveWindow();
+        string filteredWindow = Utils.FilterString(actualWindow);
+
+        foreach (string windowTitle in blockedWindowTitles)
+        {
+            string newWindowTitle = Utils.FilterString(windowTitle);
+
+            if (filteredWindow.Contains(newWindowTitle))
+            {
+                return true;
+            }
+        }
 
         foreach (Process process in Process.GetProcesses())
         {
             try
             {
-                if (process.MainWindowHandle != null && process.MainWindowHandle != new IntPtr(-1) && process.MainWindowHandle != IntPtr.Zero && process.Id != Process.GetCurrentProcess().Id)
+                if (process.MainWindowHandle != null && process.MainWindowHandle != new IntPtr(-1) && process.MainWindowHandle != IntPtr.Zero && process.Id != Process.GetCurrentProcess().Id && !Utils.FilterString(process.MainWindowTitle).Equals(""))
                 {
                     if (process.MainWindowTitle == actualWindow)
                     {
+                        string filteredProcessName = Utils.FilterString(process.ProcessName);
+
+                        foreach (string processName in blockedProcessNames)
+                        {
+                            string newProcessName = Utils.FilterString(processName);
+
+                            if (processName.Contains(newProcessName))
+                            {
+                                return true;
+                            }
+                        }
+
+                        foreach (FileList fileList in blockedFileLists)
+                        {
+                            int existsAll = 0;
+
+                            foreach (string theFile in fileList.List)
+                            {
+                                foreach (string file in System.IO.Directory.GetFiles(Utils.GetPathFromFileName(ModuleFileName.GetExecutablePath(process.Id))))
+                                {
+                                    if (Utils.FilterString(theFile).Equals(Utils.FilterString(System.IO.Path.GetFileName(file))))
+                                    {
+                                        existsAll++;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (existsAll == fileList.List.Length)
+                            {
+                                return true;
+                            }
+                        }
+
                         Scanner scanner = new Scanner(process, process.MainModule);
 
                         foreach (string pattern in blockedPatterns)

@@ -45,6 +45,11 @@ public class AntiTimeModification
 
         return false;
     }
+
+    public long GetTickCount()
+    {
+        return 30L;
+    }
     
     public static bool AreTimeFunctionsPatched()
     {

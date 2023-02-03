@@ -66,6 +66,7 @@ public partial class MainForm : MetroForm
         // https://learn.microsoft.com/en-us/dotnet/api/system.serviceprocess.servicecontroller.getdevices?view=dotnet-plat-ext-6.0
 
         // Useful resources:
+        // 0) https://github.com/AdvDebug/AntiCrack-DotNet
         // 1) https://github.com/ExpLife0011/Sagaan-AntiCheat-V2.0
         // 2) https://www.unknowncheats.me/forum/anti-cheat-bypass/291300-sagaan-anticheat-analysis.html
         // 3) https://github.com/mathisvickie/KMAC

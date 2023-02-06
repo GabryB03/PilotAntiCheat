@@ -3,6 +3,7 @@ using System;
 using System.Text;
 using System.Diagnostics;
 using System.Runtime;
+using System.Windows.Forms;
 
 public class Utils
 {
@@ -30,6 +31,12 @@ public class Utils
 
     [DllImport("ntdll.dll", SetLastError = true, CharSet = CharSet.Ansi)]
     private static extern uint LdrGetProcedureAddress(IntPtr Module, ANSI_STRING ProcedureName, ushort ProcedureNumber, out IntPtr FunctionHandle);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr GetModuleHandle(string lib);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool WriteProcessMemory(IntPtr ProcHandle, IntPtr BaseAddress, byte[] Buffer, uint size, int NumOfBytes);
 
     private static IntPtr LowLevelGetModuleHandle(string Library)
     {

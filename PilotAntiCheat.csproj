@@ -31,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -50,10 +51,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Guna.UI">
-      <HintPath>..\..\Computer\Developing\Progetti\ELZLOADER Project\ELZLOADER\bin\Release\Guna.UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Guna.UI.dll</HintPath>
     </Reference>
     <Reference Include="MetroSuite 2.0">
-      <HintPath>..\..\Computer\Developing\Progetti\ELZLOADER Project\ELZLOADER\bin\Release\MetroSuite 2.0.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\MetroSuite 2.0.dll</HintPath>
     </Reference>
     <Reference Include="Reloaded.Memory, Version=8.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Reloaded.Memory.8.0.1\lib\netstandard2.0\Reloaded.Memory.dll</HintPath>

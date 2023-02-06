@@ -1,0 +1,26 @@
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\Release\PilotAntiCheat.csproj.AssemblyReference.cache
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\Release\MainForm.resources
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\Release\PilotAntiCheat.csproj.GenerateResource.cache
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\Release\PilotAntiCheat.csproj.CoreCompileInputs.cache
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\PilotAntiCheat.exe.config
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\PilotAntiCheat.exe
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\PilotAntiCheat.pdb
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\Guna.UI.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\MetroSuite 2.0.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\Reloaded.Memory.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\Reloaded.Memory.Sigscan.Definitions.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\Reloaded.Memory.Sigscan.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\System.Buffers.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\System.Memory.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\System.Numerics.Vectors.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\Reloaded.Memory.xml
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\Reloaded.Memory.Sigscan.xml
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\Reloaded.Memory.Sigscan.Definitions.xml
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\System.Buffers.xml
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\System.Memory.xml
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\System.Numerics.Vectors.xml
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\Release\PilotAntiCheat.csproj.CopyComplete
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\Release\PilotAntiCheat.exe
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\Release\PilotAntiCheat.pdb

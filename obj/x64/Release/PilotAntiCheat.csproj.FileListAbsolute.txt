@@ -45,3 +45,5 @@ C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories
 C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\x64\Release\PilotAntiCheat.csproj.CoreCompileInputs.cache
 C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\x64\Release\PilotAntiCheat.csproj.CopyComplete
 C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\obj\x64\Release\PilotAntiCheat.exe
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\x64\Release\Guna.UI.dll
+C:\Users\gabry\Desktop\Computer\Developing\Progetti\GabryB03 GitHub\Repositories\PilotAntiCheat\bin\x64\Release\MetroSuite 2.0.dll

@@ -88,6 +88,7 @@
     <Compile Include="Antis\AntiBadModules.cs" />
     <Compile Include="Antis\AntiBadProcesses.cs" />
     <Compile Include="Antis\AntiDebug.cs" />
+    <Compile Include="Antis\AntiHooks.cs" />
     <Compile Include="Antis\AntiTimeModification.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

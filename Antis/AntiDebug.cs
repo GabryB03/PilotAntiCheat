@@ -118,71 +118,6 @@ public class AntiDebug
             return true;
         }
 
-        if (Utils.IsFunctionPatched("kernel32.dll", "IsDebuggerPresent"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("kernel32.dll", "CheckRemoteDebuggerPresent"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched(typeof(Debugger), "get_IsAttached"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("kernel32.dll", "CloseHandle"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("ntdll.dll", "NtQueryInformationProcess"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("ntdll.dll", "NtClose"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("ntdll.dll", "NtRemoveProcessDebug"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("ntdll.dll", "NtSetInformationDebugObject"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("ntdll.dll", "NtQuerySystemInformation"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("kernel32.dll", "WriteProcessMemory"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("kernel32.dll", "ReadProcessMemory"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("kernel32.dll", "OpenThread"))
-        {
-            return true;
-        }
-
-        if (Utils.IsFunctionPatched("ntdll.dll", "NtSetInformationThread"))
-        {
-            return true;
-        }
-
         if (CheckDebugObjectHandle())
         {
             return true;
@@ -255,6 +190,7 @@ public class AntiDebug
 
     private static bool OutputDebugStringAntiDebug()
     {
+        OutputDebugString("just testing some stuff...");
         OutputDebugStringA("just testing some stuff...");
 
         if (Marshal.GetLastWin32Error() == 0)

@@ -45,28 +45,6 @@ public class AntiTimeModification
 
         return false;
     }
-    
-    public static bool AreTimeFunctionsPatched()
-    {
-        if (Utils.IsFunctionPatched("kernel32.dll", "GetTickCount"))
-        {
-            return true;
-        }
-        else if (Utils.IsFunctionPatched("kernel32.dll", "GetTickCount64"))
-        {
-            return true;
-        }
-        else if (Utils.IsFunctionPatched("winmm.dll", "timeGetTime"))
-        {
-            return true;
-        }
-        else if (Utils.IsFunctionPatched("kernel32.dll", "QueryPerformanceCounter"))
-        {
-            return true;
-        }
-
-        return false;
-    }
 }
 
 public enum AntiTimeModificationFunction

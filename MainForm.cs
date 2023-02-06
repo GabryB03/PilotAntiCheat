@@ -26,12 +26,6 @@ public partial class MainForm : MetroForm
             thread.Start();
         }
 
-         {
-            Thread thread = new Thread(() => RunFunctionAntiTimeModification());
-            thread.Priority = ThreadPriority.Highest;
-            thread.Start();
-        }
-
         {
             Thread thread = new Thread(() => RunAntiDebug());
             thread.Priority = ThreadPriority.Highest;
@@ -52,6 +46,12 @@ public partial class MainForm : MetroForm
 
         {
             Thread thread = new Thread(() => RunClearRAM());
+            thread.Priority = ThreadPriority.Highest;
+            thread.Start();
+        }
+
+        {
+            Thread thread = new Thread(() => RunAntiHooks());
             thread.Priority = ThreadPriority.Highest;
             thread.Start();
         }
@@ -97,22 +97,6 @@ public partial class MainForm : MetroForm
             AntiDebug.HideCurrentThreadFromDebugger();
 
             if (AntiTimeModification.IsTimeModified(func))
-            {
-                Process.GetCurrentProcess().Kill();
-            }
-        }
-    }
-
-    public void RunFunctionAntiTimeModification()
-    {
-        AntiDebug.HideCurrentThreadFromDebugger();
-
-        while (true)
-        {
-            Thread.Sleep(500);
-            AntiDebug.HideCurrentThreadFromDebugger();
-
-            if (AntiTimeModification.AreTimeFunctionsPatched())
             {
                 Process.GetCurrentProcess().Kill();
             }
@@ -176,6 +160,22 @@ public partial class MainForm : MetroForm
             Thread.Sleep(5000);
             AntiDebug.HideCurrentThreadFromDebugger();
             Utils.ClearRAM();
+        }
+    }
+
+    public void RunAntiHooks()
+    {
+        AntiDebug.HideCurrentThreadFromDebugger();
+
+        while (true)
+        {
+            Thread.Sleep(1000);
+            AntiDebug.HideCurrentThreadFromDebugger();
+
+            if (AntiHooks.IsHookPresent())
+            {
+                Process.GetCurrentProcess().Kill();
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using MetroSuite;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -39,6 +38,29 @@ public class AntiDebug
 
     [DllImport("kernel32.dll")]
     private static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern IntPtr GetModuleHandle([MarshalAs(UnmanagedType.LPWStr)] string lpModuleName);
+
+    [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+    private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, Int32 nSize, out IntPtr lpNumberOfBytesWritten);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr GetCurrentThread();
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool GetThreadContext(IntPtr hThread, ref CONTEXT Context);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern uint GetTickCount();
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern void OutputDebugStringA(string Text);
+
+    private static long CONTEXT_DEBUG_REGISTERS = 0x00010000L | 0x00000010L;
 
     public static bool IsProcessDebugged()
     {
@@ -161,7 +183,91 @@ public class AntiDebug
             return true;
         }
 
+        if (CheckDebugObjectHandle())
+        {
+            return true;
+        }
+
+        if (AntiDebugAttach())
+        {
+            return true;
+        }
+
+        if (CheckHardwareRegistersBreakpoint())
+        {
+            return true;
+        }
+
+        if (GetTickCountAntiDebug())
+        {
+            return true;
+        }
+
+        if (OutputDebugStringAntiDebug())
+        {
+            return true;
+        }
+
+        OllyDbgFormatStringExploit();
+
         return false;
+    }
+
+    private static bool AntiDebugAttach()
+    {
+        IntPtr NtdllModule = GetModuleHandle("ntdll.dll");
+        IntPtr DbgUiRemoteBreakinAddress = GetProcAddress(NtdllModule, "DbgUiRemoteBreakin");
+        IntPtr DbgBreakPointAddress = GetProcAddress(NtdllModule, "DbgBreakPoint");
+        byte[] Int3InvaildCode = { 0xCC };
+        byte[] RetCode = { 0xC3 };
+        bool Status = WriteProcessMemory(Process.GetCurrentProcess().Handle, DbgUiRemoteBreakinAddress, Int3InvaildCode, 1, out _);
+        bool Status2 = WriteProcessMemory(Process.GetCurrentProcess().Handle, DbgBreakPointAddress, RetCode, 1, out _);
+
+        if (Status && Status2)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool CheckHardwareRegistersBreakpoint()
+    {
+        CONTEXT Context = new CONTEXT();
+        Context.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+
+        if (GetThreadContext(GetCurrentThread(), ref Context))
+        {
+            if ((Context.Dr1 != 0x00 || Context.Dr2 != 0x00 || Context.Dr3 != 0x00 || Context.Dr4 != 0x00 || Context.Dr5 != 0x00 || Context.Dr6 != 0x00 || Context.Dr7 != 0x00))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool GetTickCountAntiDebug()
+    {
+        uint Start = GetTickCount();
+        return (GetTickCount() - Start) > 0x10;
+    }
+
+    private static bool OutputDebugStringAntiDebug()
+    {
+        OutputDebugStringA("just testing some stuff...");
+
+        if (Marshal.GetLastWin32Error() == 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void OllyDbgFormatStringExploit()
+    {
+        OutputDebugStringA("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s");
     }
 
     private static bool CheckRemoteDebugger()
@@ -170,6 +276,26 @@ public class AntiDebug
         var bApiRet = CheckRemoteDebuggerPresent(Process.GetCurrentProcess().Handle, ref isDebuggerPresent);
 
         return bApiRet && isDebuggerPresent;
+    }
+
+    private static bool CheckDebugObjectHandle()
+    {
+        IntPtr hDebugObject = IntPtr.Zero;
+        uint Size = sizeof(uint);
+
+        if (Environment.Is64BitProcess)
+        {
+            Size = sizeof(uint) * 2;
+        }
+
+        NtQueryInformationProcess(Process.GetCurrentProcess().Handle, PROCESSINFOCLASS.ProcessDebugObjectHandle, out hDebugObject, (int)Size, out _);
+
+        if (hDebugObject != IntPtr.Zero)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private static bool CheckDebugPort()

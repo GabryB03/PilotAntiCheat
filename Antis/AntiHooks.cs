@@ -349,6 +349,16 @@ public class AntiHooks
             return true;
         }
 
+        if (Utils.IsFunctionHardPatched("kernel32.dll", "SetProcessMitigationPolicy"))
+        {
+            return true;
+        }
+
+        if (Utils.IsFunctionHardPatched("kernelbase.dll", "SetProcessMitigationPolicy"))
+        {
+            return true;
+        }
+
         return false;
     }
 }
